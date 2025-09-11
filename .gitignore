@@ -1,0 +1,19 @@
+### IntelliJ IDEA ###
+.idea/
+*.iml
+shelf/
+workspace.xml
+mavenHomeManager.xml
+
+### Maven ###
+target/
+
+### Logs ###
+*.log
+
+### OS garbage ###
+.DS_Store
+Thumbs.db
+
+### Custom configs ###
+src/main/resources/app.properties
