@@ -12,5 +12,6 @@ public class Main {
         // реализуйте алгоритм здесь
         UserDaoJDBCImpl userDao = new UserDaoJDBCImpl();
         userDao.createUsersTable();
+        userDao.dropUsersTable();
     }
 }
