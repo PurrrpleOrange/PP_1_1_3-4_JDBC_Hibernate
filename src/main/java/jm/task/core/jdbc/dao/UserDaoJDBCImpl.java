@@ -44,7 +44,7 @@ public class UserDaoJDBCImpl implements UserDao {
 
     public void saveUser(String name, String lastName, byte age) {
         String sql = """
-                INSERT INTO users (name, lastname, age) 
+                INSERT INTO users (name, last_name, age) 
                 values (?, ?, ?);
                 """;
         try (Connection connection = Util.open();
@@ -81,8 +81,9 @@ public class UserDaoJDBCImpl implements UserDao {
              ResultSet resultSet = preparedStatement.executeQuery()) {
             while (resultSet.next()) {
                 list.add(new User(
+                        resultSet.getLong("id"),
                         resultSet.getString("name"),
-                        resultSet.getString("lastname"),
+                        resultSet.getString("last_name"),
                         resultSet.getByte("age"))
                 );
             }
