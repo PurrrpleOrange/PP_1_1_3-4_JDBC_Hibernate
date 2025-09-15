@@ -2,6 +2,7 @@ package jm.task.core.jdbc.dao;
 
 import jm.task.core.jdbc.model.User;
 import jm.task.core.jdbc.util.Util;
+import jm.task.core.jdbc.util.exception.DatabaseException;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -24,21 +25,21 @@ public class UserDaoJDBCImpl implements UserDao {
              Statement statement = connection.createStatement()) {
             var execute = statement.execute(sql);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DatabaseException("Create users table error", e);
+//            Насчет рантайма: я смотрел видосы/гуглил/спрашивал у гпт, тут пробрасывается кастомное анчекд исключение,
+//            чтобы не связывать слой sql логики со слоем логики сервисов, иначе везде бы пришлось указывать throw и это
+//            бед практис, нужно лоу лвл чекед экзепшнс оборачивать в кастомные анчекед исключения, но я поленился и
+//            просто указал рантайм экзепшн. Если что-то не так написал, то оставь коммент, пж
         }
-
-
     }
 
     public void dropUsersTable() {
-        String sql = """
-                DROP TABLE if exists USERS;
-                """;
+        String sql = "DROP TABLE if exists USERS;";
         try (Connection connection = Util.open();
         Statement statement = connection.createStatement()) {
             var execute = statement.execute(sql);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DatabaseException("Drop users table error", e);
         }
     }
 
@@ -54,28 +55,24 @@ public class UserDaoJDBCImpl implements UserDao {
             preparedStatement.setByte(3, age);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DatabaseException("Save user in table users error", e);
         }
     }
 
     public void removeUserById(long id) {
-        String sql = """
-                delete from users where id = ?
-                """;
+        String sql = "delete from users where id = ?";
         try (Connection connection = Util.open();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DatabaseException("Delete user in table users error", e);
         }
     }
 
     public List<User> getAllUsers() {
         List<User> list = new ArrayList<>();
-        String sql = """
-                Select * from users;
-                """;
+        String sql = "Select * from users";
         try (Connection connection = Util.open();
              PreparedStatement preparedStatement = connection.prepareStatement(sql);
              ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -89,19 +86,17 @@ public class UserDaoJDBCImpl implements UserDao {
             }
             return list;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DatabaseException("Select all users in table users error", e);
         }
     }
 
     public void cleanUsersTable() {
-        String sql = """
-                truncate table users;
-                """;
+        String sql = "truncate table users;";
         try (Connection connection = Util.open();
              Statement statement = connection.createStatement()) {
             var execute = statement.execute(sql);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DatabaseException("Clean users table error", e);
         }
     }
 }
