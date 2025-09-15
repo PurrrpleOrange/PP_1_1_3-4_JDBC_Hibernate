@@ -1,5 +1,7 @@
 package jm.task.core.jdbc.util;
 
+import jm.task.core.jdbc.util.exception.DatabaseException;
+
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -22,7 +24,7 @@ public final class Util {
                     UtilProperties.getProperty(USERNAME_KEY),
                     UtilProperties.getProperty(PASSWORD_KEY));
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DatabaseException("db connection error", e);
         }
     }
 }
